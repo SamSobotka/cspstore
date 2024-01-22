@@ -1,0 +1,39 @@
+.login-page * {
+    box-sizing: border-box;
+    padding: 0;
+    text-align: left;
+    max-width: 500px;
+    margin: 5px auto;
+}
+
+.Login-label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.Login-input {
+    border: 1px solid #f0f0f0;
+    padding: .5rem .8rem;
+    border-radius: 5px;
+}
+
+#register-message {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+#login-form h3 {
+    text-align: center;
+}
+
+#login {
+    text-align: center;
+    margin: 15px auto;
+}
+
+#login-submit {
+    padding: 2px 4px;
+    margin-left: 155px;
+}
