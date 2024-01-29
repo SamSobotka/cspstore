@@ -1,26 +1,23 @@
 import './App.css';
-import './styles/login.css'
-import {LoginForm} from "./components/formComponents";
+import './styles/login.css';
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import HomePage from "./pages/home";
+import Error404Page from "./pages/nopage";
 
 function App() {
-  return (
-    <div className="App">
-        <header className='App-header'>
-            <h1>CSP Store</h1>
-        </header>
-        <div className="login-page">
-            <div>
-                <h2 id="login">You must be logged in to use the store!</h2>
-            </div>
-            <div>
-                <LoginForm/>
-            </div>
-            <div id="register-message">
-                Don't have an account? Register here!
-            </div>
-        </div>
-    </div>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/home" element={<HomePage />} />
+                <Route path="*" element={<Error404Page />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;

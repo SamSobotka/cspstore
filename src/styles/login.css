@@ -28,12 +28,21 @@
     text-align: center;
 }
 
+#register-form h3 {
+    text-align: center;
+}
+
 #login {
     text-align: center;
     margin: 15px auto;
 }
 
 #login-submit {
+    padding: 2px 4px;
+    margin-left: 155px;
+}
+
+#register-submit {
     padding: 2px 4px;
     margin-left: 155px;
 }
