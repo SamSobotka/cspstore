@@ -25,4 +25,4 @@ function ItemList({ filterItems, addToCart }) {
     );
 }
 
-export default ItemList
+export default ItemList;

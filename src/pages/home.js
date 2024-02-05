@@ -2,13 +2,14 @@ import {useState} from "react";
 import SearchBar from "../components/SearchBar";
 import ItemList from "../components/ItemList";
 import Cart from "../components/Cart";
-import products from "../store_items.json";
+import productList from "../store_items.json";
 
 import "../styles/home.css"
+import {Link} from "react-router-dom";
 
 // Mostly adapted from https://www.geeksforgeeks.org/shopping-cart-app-using-react/#
 function HomePage() {
-    const [items, setItems] = useState(products);
+    const [items, setItems] = useState(productList.items);
     const [cartItems, setCartItems] = useState([]);
     const [itemSearched, setItemSearched] = useState('');
 
@@ -66,6 +67,10 @@ function HomePage() {
                     deleteFromCart={deleteFromCart}
                     setCartItems={setCartItems}
                 />
+            </div>
+            <div className="admin">
+                <hr/>
+                <Link to="/admin">Edit Item List (Admin)</Link>
             </div>
         </div>
     );
