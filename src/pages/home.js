@@ -1,20 +1,26 @@
 import {useState} from "react";
 import SearchBar from "../components/SearchBar";
 import ItemList from "../components/ItemList";
-import Cart from "../components/Cart";
-import productList from "../store_items.json";
+import {useSelector, useDispatch} from "react-redux";
+import {setCartItems} from "../features/shop/shopSlice";
 
-import "../styles/home.css"
+import "../styles/home.css";
 import {Link} from "react-router-dom";
 
 // Mostly adapted from https://www.geeksforgeeks.org/shopping-cart-app-using-react/#
 function HomePage() {
-    const [items, setItems] = useState(productList.items);
-    const [cartItems, setCartItems] = useState([]);
+    // const [items, setItems] = useState(productList.items);
+    // const [cartItems, setCartItems] = useState([]);
+    const items = useSelector(state => state.shop.value.storeItems);
+    const cartItems = useSelector(state => state.shop.value.cartItems);
     const [itemSearched, setItemSearched] = useState('');
 
+    const dispatch = useDispatch();
+
     const addToCart = (itemToAdd) => {
-        const itemExists = cartItems.find(item => item.item.id = itemToAdd.id);
+        const itemExists = cartItems.length > 0 ?
+            cartItems.find(item => item.item.id === itemToAdd.id) :
+            null;
         if (itemExists) {
             const updatedCart = cartItems.map(item =>
                 item.item.id === itemToAdd.id ? {
@@ -22,20 +28,15 @@ function HomePage() {
                 }
                 : item
             );
-            setCartItems(updatedCart);
+            dispatch(setCartItems(updatedCart));
         } else {
-            setCartItems([...cartItems, {item: itemToAdd, quantity: 1}]);
+            dispatch(setCartItems([...cartItems, {item: itemToAdd, quantity: 1}]));
         }
     };
 
-    const deleteFromCart = (itemToDelete) => {
-        const updatedCart = cartItems.filter(item => item.item.id !== itemToDelete.id);
-        setCartItems(updatedCart);
-    };
-
-    const calculateTotal = () => {
+    const getTotalItems = () => {
         return cartItems.reduce((total, item) =>
-            total + item.item.price * item.quantity, 0
+            total + item.quantity, 0
         );
     };
 
@@ -51,21 +52,20 @@ function HomePage() {
         <div className="App">
             <header className='App-header'>
                 <h1>CSP Store</h1>
-                <SearchBar
-                    itemSearched={itemSearched}
-                    searchFor={searchFor}
-                />
+                <div className="navbar-home">
+                    <SearchBar
+                        itemSearched={itemSearched}
+                        searchFor={searchFor}
+                    />
+                    <Link to={"/cart"} className="cart-button">
+                        <button>Cart: {getTotalItems()} items</button>
+                    </Link>
+                </div>
             </header>
             <div className="home">
                 <ItemList
                     filterItems={filterItems}
                     addToCart={addToCart}
-                />
-                <Cart
-                    cartItems={cartItems}
-                    calculateTotal={calculateTotal}
-                    deleteFromCart={deleteFromCart}
-                    setCartItems={setCartItems}
                 />
             </div>
             <div className="admin">

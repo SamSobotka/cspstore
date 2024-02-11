@@ -6,6 +6,7 @@ import Register from "./pages/register";
 import HomePage from "./pages/home";
 import Error404Page from "./pages/nopage";
 import Admin from "./pages/admin";
+import CartPage from "./pages/cart";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/cart" element={<CartPage />} />
                 <Route path="*" element={<Error404Page />} />
             </Routes>
         </BrowserRouter>

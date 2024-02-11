@@ -1,15 +1,24 @@
 // Adapted from https://www.geeksforgeeks.org/shopping-cart-app-using-react/#
+import {Link} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setCartItems} from "../features/shop/shopSlice";
+
 function Cart({
     cartItems,
     deleteFromCart,
-    calculateTotal,
-    setCartItems
+    calculateTotal
 }) {
+    const dispatch = useDispatch();
+
     return (
-        <div className={`cart ${cartItems.length > 0 ? 'active' : ''}`}>
+        <div className="cart">
             <h2>Shopping Cart</h2>
             {cartItems.length === 0 ? (
-                <p className="empty-cart">Your cart is empty</p>
+                <div className="empty-cart">
+                    <p>Your cart is empty</p>
+                    <Link to="/home">Add some items!</Link>
+                </div>
+
             ) : (
                 <div>
                     <ul>
@@ -35,34 +44,32 @@ function Cart({
                                             <button
                                                 style={{ margin: "1%" }}
                                                 onClick={() => {
-                                                    setCartItems((prevCartItems) => {
-                                                        return prevCartItems.map(
-                                                            (prevItem) =>
-                                                                prevItem.item.id === item.item.id
-                                                                    ? {
-                                                                        ...prevItem, quantity:
-                                                                            Math.max(item.quantity - 1, 0)
-                                                                    }
-                                                                    : prevItem
-                                                        );
-                                                    })
+                                                    const newCartItems = cartItems.map(
+                                                        (prevItem) =>
+                                                            prevItem.item.id === item.item.id
+                                                                ? {
+                                                                    ...prevItem, quantity:
+                                                                        Math.max(item.quantity - 1, 0)
+                                                                }
+                                                                : prevItem
+                                                    );
+                                                    dispatch(setCartItems(newCartItems));
                                                 }}>
                                                 -
                                             </button>
                                             <p className='quant'>{item.quantity} </p>
                                             <button
                                                 onClick={() => {
-                                                    setCartItems((prevCartItems) => {
-                                                        return prevCartItems.map(
-                                                            (prevItem) =>
-                                                                prevItem.item.id === item.item.id
-                                                                    ? {
-                                                                        ...prevItem, quantity:
-                                                                            item.quantity + 1
-                                                                    }
-                                                                    : prevItem
-                                                        );
-                                                    })
+                                                    const newCartItems = cartItems.map(
+                                                        (prevItem) =>
+                                                            prevItem.item.id === item.item.id
+                                                                ? {
+                                                                    ...prevItem, quantity:
+                                                                        item.quantity + 1
+                                                                }
+                                                                : prevItem
+                                                    );
+                                                    dispatch(setCartItems(newCartItems));
                                                 }}>
                                                 +
                                             </button>
@@ -84,6 +91,11 @@ function Cart({
                         >
                             Proceed to Checkout
                         </button>
+                        <Link to={"/home"}>
+                            <button
+                                className="continue-shopping"
+                            >Continue Shopping</button>
+                        </Link>
                     </div>
                 </div>
             )}
