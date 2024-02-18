@@ -1,38 +1,103 @@
 import { useState } from "react";
 import '../styles/login.css';
+import {useNavigate} from "react-router-dom";
+
+const backendURL = process.env.REACT_APP_BACKEND_URL;
 
 export const LoginForm = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`${backendURL}/api/login`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    email,
+                    password
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (data) {
+                alert(`Successfully logged in! Here's the token: ${data.token}`) // REDO THIS TO ACTUALLY USE TOKEN TO AUTHENTICATE
+                navigate("/home");
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     return (
-        <form id="login-form">
+        <form id="login-form" onSubmit={handleSubmit}>
             <h3>Log In</h3>
-            <EmailField/> <br/>
-            <PasswordField/> <br/>
+            <EmailField setEmail={setEmail} /> <br />
+            <PasswordField setPassword={setPassword} /> <br />
             <input type="submit" value="Login" id="login-submit"/>
         </form>
     );
 };
 
 export const RegisterForm = () => {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`${backendURL}/api/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    password
+                }),
+            });
+
+            if (response.ok) {
+                navigate("/");
+            } else {
+                // display error message
+                console.error(await response.text())
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     return (
-        <form id="register-form">
+        <form id="register-form" onSubmit={handleSubmit}>
             <h3>Register</h3>
-            <FirstNameField/> <br/>
-            <LastNameField/> <br/>
-            <EmailField/> <br/>
-            <PasswordField/> <br/>
+            <FirstNameField setFirstName={setFirstName} /> <br />
+            <LastNameField setLastName={setLastName} /> <br />
+            <EmailField setEmail={setEmail} /> <br />
+            <PasswordField setPassword={setPassword} /> <br />
             <input type="submit" value="Register" id="register-submit"/>
         </form>
     );
 };
 
-const FirstNameField = () => {
-    const [firstName, setFirstName] = useState("");
+const FirstNameField = ({setFirstName}) => {
     return (
         <>
             <label htmlFor="firstName" className="Login-label">First Name</label>
             <input
                 type="text"
-                value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 id="firstName"
                 className="Login-input"
@@ -41,14 +106,12 @@ const FirstNameField = () => {
     );
 };
 
-const LastNameField = () => {
-    const [lastName, setLastName] = useState("");
+const LastNameField = ({setLastName}) => {
     return (
         <>
             <label htmlFor="lastName" className="Login-label">Last Name</label>
             <input
                 type="text"
-                value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 id="lastName"
                 className="Login-input"
@@ -57,14 +120,12 @@ const LastNameField = () => {
     );
 };
 
-const EmailField = () => {
-    const [email, setEmail] = useState("");
+const EmailField = ({setEmail}) => {
     return (
         <>
             <label htmlFor="email" className="Login-label">Email</label>
             <input
                 type="email"
-                value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 id="email"
                 className="Login-input"
@@ -73,14 +134,12 @@ const EmailField = () => {
     );
 };
 
-const PasswordField = () => {
-    const [password, setPassword] = useState("");
+const PasswordField = ({setPassword}) => {
     return (
         <>
             <label htmlFor="password" className="Login-label">Password</label>
             <input
                 type="password"
-                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 id="password"
                 className="Login-input"
