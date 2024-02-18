@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const dbURL = process.env.MONGODB_URL || 'mongodb://localhost:27017/';
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
