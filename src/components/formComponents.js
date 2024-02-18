@@ -2,7 +2,7 @@ import { useState } from "react";
 import '../styles/login.css';
 import {useNavigate} from "react-router-dom";
 
-const backendURL = process.env.REACT_APP_BACKEND_URL;
+const backendURL = process.env.REACT_APP_BACKEND_URL || '';
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("");
