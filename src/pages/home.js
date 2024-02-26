@@ -58,11 +58,11 @@ function HomePage() {
                         searchFor={searchFor}
                     />
                     <Link to={"/cart"} className="cart-button">
-                        <button>Cart: {getTotalItems()} items</button>
+                        <button>Cart: {getTotalItems()} item(s)</button>
                     </Link>
                 </div>
             </header>
-            <div className="home">
+            <div className="home" role="main">
                 <ItemList
                     filterItems={filterItems}
                     addToCart={addToCart}

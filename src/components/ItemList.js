@@ -8,7 +8,7 @@ function ItemList({ filterItems, addToCart }) {
                 </p>
             ) : (
                 filterItems.map((item) => (
-                    <div className="item" key={item.id}>
+                    <div className="item" key={item.id} role="listitem">
                         <img src={item.image} alt={item.name} />
                         <h2>{item.name}</h2>
                         <p>${item.price}</p>

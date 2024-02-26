@@ -74,6 +74,10 @@ app.post('/api/register', async (req, res) => {
             return res.status(400).json({message: 'Email already registered'});
         }
 
+        if (!email) {
+            return res.status(400).json({message: 'Email is required'});
+        }
+
         const newUser = new User({firstName, lastName, email, password});
         await newUser.save();
 
@@ -84,6 +88,26 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+app.post('/api/delete', async (req, res) => {
+    try {
+        const {email} = req.body;
+
+        const existingUser = await User.findOne({email});
+        if (!existingUser) {
+            return res.status(400).json({message: 'User not found'});
+        }
+
+        User.deleteOne({email}).then(() => console.log('User deleted successfully')).catch(err => console.error(err));
+
+        res.status(200).json({message: 'User deleted successfully'});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({message: `Server error: ${err}`});
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Listening at port ${PORT}`);
-})
+});
+
+module.exports = app;

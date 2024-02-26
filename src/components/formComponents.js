@@ -10,6 +10,9 @@ export const LoginForm = () => {
 
     const navigate = useNavigate();
 
+    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessageDisplay, setErrorMessageDisplay] = useState("none");
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -25,9 +28,12 @@ export const LoginForm = () => {
                 }
             });
             const data = await response.json();
-            if (data) {
+            if (data.token) {
                 alert(`Successfully logged in! Here's the token: ${data.token}`) // REDO THIS TO ACTUALLY USE TOKEN TO AUTHENTICATE
                 navigate("/home");
+            } else {
+                setErrorMessage(data.message);
+                setErrorMessageDisplay('block');
             }
         } catch (e) {
             console.error(e);
@@ -35,10 +41,11 @@ export const LoginForm = () => {
     }
 
     return (
-        <form id="login-form" onSubmit={handleSubmit}>
+        <form id="login-form" onSubmit={handleSubmit} aria-label='login-form'>
             <h3>Log In</h3>
             <EmailField setEmail={setEmail} /> <br />
             <PasswordField setPassword={setPassword} /> <br />
+            <p style={{display: `${errorMessageDisplay}`, color: 'red'}} id="error-message">{errorMessage}</p>
             <input type="submit" value="Login" id="login-submit"/>
         </form>
     );
@@ -51,6 +58,9 @@ export const RegisterForm = () => {
     const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessageDisplay, setErrorMessageDisplay] = useState("none");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -69,11 +79,12 @@ export const RegisterForm = () => {
                 }),
             });
 
+            const data = await response.json();
             if (response.ok) {
                 navigate("/");
             } else {
-                // display error message
-                console.error(await response.text())
+                setErrorMessage(data.message);
+                setErrorMessageDisplay('block');
             }
         } catch (e) {
             console.error(e);
@@ -81,12 +92,13 @@ export const RegisterForm = () => {
     }
 
     return (
-        <form id="register-form" onSubmit={handleSubmit}>
+        <form id="register-form" onSubmit={handleSubmit} aria-label='register-form'>
             <h3>Register</h3>
-            <FirstNameField setFirstName={setFirstName} /> <br />
-            <LastNameField setLastName={setLastName} /> <br />
-            <EmailField setEmail={setEmail} /> <br />
-            <PasswordField setPassword={setPassword} /> <br />
+            <FirstNameField setFirstName={setFirstName}/> <br/>
+            <LastNameField setLastName={setLastName}/> <br/>
+            <EmailField setEmail={setEmail}/> <br/>
+            <PasswordField setPassword={setPassword}/> <br/>
+            <p style={{display: `${errorMessageDisplay}`, color: 'red'}} id="error-message">{errorMessage}</p>
             <input type="submit" value="Register" id="register-submit"/>
         </form>
     );

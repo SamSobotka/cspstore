@@ -59,12 +59,12 @@ class AdminItemList extends React.Component {
 
     render() {
         return (
-            <div>
+            <div role='main'>
                 <h2>Edit Items</h2>
                 <div className="admin-item-list">
-                    <Accordion style={{ maxWidth: '700px' }}>
+                    <Accordion style={{ maxWidth: '700px' }} role='list'>
                         {this.state.storeItems.map((item) => (
-                            <Card>
+                            <Card key={item.id} role='listitem'>
                                 <Card.Header>
                                     <span style={{ marginRight: '5px' }}>{item.name} ${item.price}</span>
                                     <EditButton eventKey={item.id}>Edit Item</EditButton>
@@ -85,15 +85,16 @@ class AdminItemList extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        let form = event.currentTarget;
+        let form = event.target;
+        console.log(event);
 
         this.setState((prevState) => ({
             storeItems: prevState.storeItems.map(item => {
-                if (item.id === parseInt(form.itemID.value)) {
+                if (item.id === parseInt(form.elements.itemID.value)) {
                     return {
                         ...item,
-                        name: form.itemName.value,
-                        price: form.itemPrice.value
+                        name: form.elements.itemName.value,
+                        price: parseFloat(form.elements.itemPrice.value)
                     };
                 }
                 return item;
@@ -102,7 +103,11 @@ class AdminItemList extends React.Component {
     }
 
     getNewID = () => {
-        return this.state.storeItems.length + 1;
+        let maxID = this.state.storeItems.reduce((max, item) => {
+            return item.id > max ? item.id : max;
+        }, 0);
+
+        return maxID + 1;
     }
 
     createNewItem = () => {
@@ -141,25 +146,25 @@ function EditItemForm({ item, onSubmit, deleteItem }) {
     const [itemPrice, setItemPrice] = useState(item.price);
 
     return (
-        <Form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit} role='form'>
             <Form.Group>
-                <Form.Label>Name</Form.Label>
-                <Form.Control value={itemName} type='text' name='itemName'
+                <Form.Label htmlFor={`itemName${item.id}`}>Name</Form.Label>
+                <Form.Control value={itemName} type='text' name='itemName' id={`itemName${item.id}`}
                               onChange={(e) => {
                                   setItemName(e.target.value);
                               }}
                 />
             </Form.Group>
             <Form.Group>
-                <Form.Label>Price</Form.Label>
-                <Form.Control value={itemPrice} type='text' name='itemPrice'
+                <Form.Label htmlFor={`itemPrice${item.id}`}>Price</Form.Label>
+                <Form.Control value={itemPrice} type='text' name='itemPrice' id={`itemPrice${item.id}`}
                               onChange={(e) => {
                                   setItemPrice(e.target.value);
                               }}
                 />
             </Form.Group>
-            <Form.Control value={item.id} hidden='true' disabled name='itemID' />
-            <Button type='submit'>Save Item</Button>
+            <Form.Control value={item.id} hidden={true} disabled name='itemID' />
+            <Button type='submit' onClick={() => console.log('ID of item: ', item.id)}>Save Item</Button>
             <Button onClick={deleteItem}>Delete Item</Button>
         </Form>
     );
